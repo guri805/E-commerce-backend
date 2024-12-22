@@ -6,6 +6,7 @@ require('./config/Db')
 const AuthRouter = require('./Router/AuthRouter')
 const port = 3001;
 
+// main app 
 app.use(bodyParser.json());
 app.use(cors())
 app.use('/', AuthRouter)
