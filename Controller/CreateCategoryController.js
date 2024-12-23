@@ -5,7 +5,7 @@ const slugify = require("slugify");
 // Create category
 const createCategory = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { category: name } = req.body;
         if (!name) {
             return res.status(200).json({ success: false, message: "Category name is required", });
         }
@@ -21,6 +21,21 @@ const createCategory = async (req, res) => {
     } catch (error) {
         console.error("Error while adding category:", error.message);
         res.status(500).json({ success: false, message: "Error while adding category", });
+    }
+}
+
+// fetch categories
+
+const fetchCategories = async (req, res) => {
+    try {
+        const categories = await Category.find();
+        if (!categories) {
+            return res.status(200).json({ success: false, message: "Category not found", });
+        }
+        return res.status(200).json({ success: true, message: "Category fetch successfull", categories });
+    } catch (error) {
+        console.error("Error while fetching category:", error.message);
+        res.status(500).json({ success: false, message: "Error while fetching category" });
     }
 }
 
@@ -47,8 +62,8 @@ const updateCategory = async (req, res) => {
         const categoryId = req.params.id;
         const { name } = req.body;
         const updateData = {
-            ...(name && { name }), 
-            ...(name && { slug: slugify(name) }) 
+            ...(name && { name }),
+            ...(name && { slug: slugify(name) })
         };
         const updateCategoryData = await Category.findByIdAndUpdate({ _id: categoryId }, updateData, { new: true })
 
@@ -62,4 +77,4 @@ const updateCategory = async (req, res) => {
     }
 }
 
-module.exports = { createCategory, deleteCategory, updateCategory };
+module.exports = { createCategory, fetchCategories, deleteCategory, updateCategory };
